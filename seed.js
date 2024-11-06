@@ -8,6 +8,8 @@ const syncSeed = async () => {
     // BONUS: Update with Item and Menu bulkCreate
 
 
-}
+};
 
-syncSeed()
+syncSeed();
+
+module.exports = syncSeed;
