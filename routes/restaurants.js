@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const Restaurant = require("../models/Restaurant.js");
 const router = Router();
+const { check, validationResult } = require("express-validator");
 
 router.get("/", async function(req, res) {
     const restaurants = await Restaurant.findAll();
@@ -12,10 +13,19 @@ router.get("/:id", async function(req, res) {
     res.json(restaurant);
 })
 
-router.post("/", async function(req, res) {
+router.post("/", [
+    check("name").not().isEmpty().trim(),
+    check("location").not().isEmpty().trim(),
+    check("cuisine").not().isEmpty().trim()
+], async function(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.json({error: errors.array()})
+    } else {
     const restaurant = await Restaurant.create(req.body);
     const restaurants = await Restaurant.findAll();
     res.json(restaurants);
+    }
 })
 
 router.put("/:id", async function(req, res) {

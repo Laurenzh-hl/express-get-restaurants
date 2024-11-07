@@ -66,6 +66,30 @@ describe("POST /restaurants", () => {
         .send({ name: "Hoppers", location: "Soho", cuisine: "Srilankan" });
         expect(response.body.length).toEqual(restQuantity + 1);
     });
+
+    it("returns an error array when name field is empty", async () => {
+        const response = await request(app)
+        .post("/restaurants")
+        .send({ location: "Soho", cuisine: "Srilankan" });
+        expect(response.body).toHaveProperty("error");
+        expect(Array.isArray(response.body.error)).toBe(true);
+    })
+
+    it("returns an error array when location field is empty", async () => {
+        const response = await request(app)
+        .post("/restaurants")
+        .send({ name: "Hoppers", cuisine: "Srilankan" });
+        expect(response.body).toHaveProperty("error");
+        expect(Array.isArray(response.body.error)).toBe(true);
+    })
+
+    it("returns an error array when cuisine field is empty", async () => {
+        const response = await request(app)
+        .post("/restaurants")
+        .send({ name: "Hoppers", location: "Soho" });
+        expect(response.body).toHaveProperty("error");
+        expect(Array.isArray(response.body.error)).toBe(true);
+    })
 });
 
 describe("PUT /restaurants/:id", () => {
