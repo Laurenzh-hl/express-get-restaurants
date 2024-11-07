@@ -63,7 +63,7 @@ describe("POST /restaurants", () => {
     it("returns a larger restaurant array", async () => {
         const response = await request(app)
         .post("/restaurants")
-        .send({ name: "Hoppers", location: "Soho", cuisine: "Srilankan" });
+        .send({ name: "Hoppers Sohon", location: "Soho", cuisine: "Srilankan" });
         expect(response.body.length).toEqual(restQuantity + 1);
     });
 
@@ -78,7 +78,7 @@ describe("POST /restaurants", () => {
     it("returns an error array when location field is empty", async () => {
         const response = await request(app)
         .post("/restaurants")
-        .send({ name: "Hoppers", cuisine: "Srilankan" });
+        .send({ name: "Hoppers Soho", cuisine: "Srilankan" });
         expect(response.body).toHaveProperty("error");
         expect(Array.isArray(response.body.error)).toBe(true);
     })
@@ -86,7 +86,23 @@ describe("POST /restaurants", () => {
     it("returns an error array when cuisine field is empty", async () => {
         const response = await request(app)
         .post("/restaurants")
-        .send({ name: "Hoppers", location: "Soho" });
+        .send({ name: "Hoppers Soho", location: "Soho" });
+        expect(response.body).toHaveProperty("error");
+        expect(Array.isArray(response.body.error)).toBe(true);
+    })
+
+    it("returns an error array when name is less than 10 characters", async () => {
+        const response = await request(app)
+        .post("/restaurants")
+        .send({ name: "Hoppers", location: "Soho", cuisine: "Srilankan" });
+        expect(response.body).toHaveProperty("error");
+        expect(Array.isArray(response.body.error)).toBe(true);
+    })
+
+    it("returns an error array when name is more than 30 characters", async () => {
+        const response = await request(app)
+        .post("/restaurants")
+        .send({ name: "Al's Pancake World of International Cuisine", location: "Soho", cuisine: "Srilankan" });
         expect(response.body).toHaveProperty("error");
         expect(Array.isArray(response.body.error)).toBe(true);
     })
